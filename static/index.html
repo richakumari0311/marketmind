@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MarketMind</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #0f1117;
+    color: #e2e8f0;
+    min-height: 100vh;
+  }
+
+  header {
+    padding: 24px 40px;
+    border-bottom: 1px solid #1e2535;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  header h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #f8fafc;
+    letter-spacing: -0.3px;
+  }
+
+  header .badge {
+    font-size: 11px;
+    font-weight: 500;
+    background: #1a2744;
+    color: #60a5fa;
+    border: 1px solid #2d4a8a;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    height: calc(100vh - 65px);
+  }
+
+  /* --- Sidebar --- */
+  .sidebar {
+    border-right: 1px solid #1e2535;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+  }
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: #94a3b8;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  textarea {
+    width: 100%;
+    background: #161b27;
+    border: 1px solid #1e2535;
+    border-radius: 8px;
+    color: #e2e8f0;
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 12px;
+    resize: vertical;
+    min-height: 140px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  textarea:focus { border-color: #3b82f6; }
+
+  select, input[type="number"] {
+    width: 100%;
+    background: #161b27;
+    border: 1px solid #1e2535;
+    border-radius: 8px;
+    color: #e2e8f0;
+    font-size: 13px;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+    appearance: none;
+  }
+  select:focus, input[type="number"]:focus { border-color: #3b82f6; }
+
+  .run-btn {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+    width: 100%;
+  }
+  .run-btn:hover { background: #1d4ed8; }
+  .run-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  /* --- Pipeline progress --- */
+  .pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .phase-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: #161b27;
+    border: 1px solid #1e2535;
+    font-size: 13px;
+    color: #64748b;
+    transition: all 0.2s;
+  }
+  .phase-row.running {
+    border-color: #2563eb;
+    color: #93c5fd;
+  }
+  .phase-row.done {
+    border-color: #16a34a;
+    color: #86efac;
+  }
+  .phase-row.error {
+    border-color: #dc2626;
+    color: #fca5a5;
+  }
+
+  .phase-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #1e2535;
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+  .phase-row.running .phase-dot { background: #2563eb; animation: pulse 1s infinite; }
+  .phase-row.done .phase-dot { background: #16a34a; }
+  .phase-row.error .phase-dot { background: #dc2626; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* --- Main content area --- */
+  .main {
+    overflow-y: auto;
+    padding: 28px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 12px;
+    color: #334155;
+  }
+  .empty-state .icon { font-size: 48px; }
+  .empty-state p { font-size: 15px; }
+
+  /* --- Campaign banner --- */
+  .campaign-banner {
+    background: linear-gradient(135deg, #1a2744 0%, #0f1a2e 100%);
+    border: 1px solid #2d4a8a;
+    border-radius: 12px;
+    padding: 20px 24px;
+  }
+  .campaign-banner .goal-tag {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #60a5fa;
+    margin-bottom: 6px;
+  }
+  .campaign-banner h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 12px;
+  }
+  .kpi-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .kpi {
+    background: #0f1a2e;
+    border: 1px solid #1e3a5f;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+  .kpi .kpi-label { color: #64748b; margin-bottom: 2px; }
+  .kpi .kpi-value { color: #93c5fd; font-weight: 600; font-size: 13px; }
+
+  /* --- Section headers --- */
+  .section-header {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #475569;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #1e2535;
+  }
+
+  /* --- Score cards --- */
+  .scores-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+
+  .score-card {
+    background: #161b27;
+    border: 1px solid #1e2535;
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .score-card .score-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .score-card .score-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #cbd5e1;
+    line-height: 1.4;
+  }
+  .score-badge {
+    font-size: 18px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .score-badge.high { color: #4ade80; }
+  .score-badge.mid  { color: #facc15; }
+  .score-badge.low  { color: #f87171; }
+
+  .dim-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 10px;
+  }
+  .dim-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: #64748b;
+  }
+  .dim-bar-row span:first-child { width: 72px; flex-shrink: 0; }
+  .bar-track {
+    flex: 1;
+    background: #1e2535;
+    border-radius: 4px;
+    height: 5px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: #2563eb;
+    transition: width 0.6s ease;
+  }
+  .dim-bar-row .dim-val { width: 16px; text-align: right; flex-shrink: 0; }
+
+  .score-verdict {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.5;
+    border-top: 1px solid #1e2535;
+    padding-top: 8px;
+  }
+
+  /* --- Content pieces --- */
+  .pieces-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .piece-card {
+    background: #161b27;
+    border: 1px solid #1e2535;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .piece-card.rewritten {
+    border-color: #16a34a;
+  }
+
+  .piece-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    border-bottom: 1px solid #1e2535;
+    background: #0f1117;
+    cursor: pointer;
+    user-select: none;
+  }
+  .piece-header:hover { background: #161b27; }
+
+  .type-tag {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: #1a2744;
+    color: #60a5fa;
+    border: 1px solid #2d4a8a;
+    flex-shrink: 0;
+  }
+  .rewritten .type-tag {
+    background: #14321f;
+    color: #4ade80;
+    border-color: #166534;
+  }
+
+  .piece-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #e2e8f0;
+    flex: 1;
+  }
+
+  .piece-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 11px;
+    color: #475569;
+    flex-shrink: 0;
+  }
+
+  .piece-body {
+    padding: 18px;
+    display: none;
+  }
+  .piece-body.open { display: block; }
+
+  .piece-content {
+    font-size: 14px;
+    line-height: 1.75;
+    color: #94a3b8;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .piece-cta {
+    margin-top: 14px;
+    padding: 10px 14px;
+    background: #0f1a2e;
+    border: 1px solid #1e3a5f;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #60a5fa;
+  }
+  .piece-cta strong { color: #93c5fd; }
+
+  .changes-list {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .change-item {
+    font-size: 12px;
+    color: #4ade80;
+    padding: 4px 0;
+    border-top: 1px solid #1e2535;
+  }
+  .change-item:first-child { border-top: none; }
+
+  .rewrite-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #4ade80;
+  }
+
+  .error-box {
+    background: #1c0a0a;
+    border: 1px solid #7f1d1d;
+    border-radius: 8px;
+    padding: 16px;
+    color: #fca5a5;
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>MarketMind</h1>
+  <span class="badge">AI Agent Pipeline</span>
+</header>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div>
+      <label>Product description</label>
+      <textarea id="product" placeholder="Describe your product and target audience...">MarketMind -- a B2B SaaS tool that helps marketing teams at remote-first startups plan, generate, and iterate on campaign content using AI agents. Replaces 3-4 separate tools with one unified workflow.</textarea>
+    </div>
+
+    <div>
+      <label>Campaign goal</label>
+      <select id="goal">
+        <option value="awareness">Awareness</option>
+        <option value="leads">Leads</option>
+        <option value="retention">Retention</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Content pieces</label>
+      <input type="number" id="pieces" value="3" min="1" max="6" />
+    </div>
+
+    <button class="run-btn" id="runBtn" onclick="runPipeline()">
+      Run Campaign
+    </button>
+
+    <!-- Pipeline progress -->
+    <div class="pipeline" id="pipeline">
+      <div class="phase-row" id="phase-1">
+        <div class="phase-dot"></div> ResearchAgent
+      </div>
+      <div class="phase-row" id="phase-2">
+        <div class="phase-dot"></div> StrategyAgent
+      </div>
+      <div class="phase-row" id="phase-3">
+        <div class="phase-dot"></div> ContentAgent
+      </div>
+      <div class="phase-row" id="phase-4">
+        <div class="phase-dot"></div> CritiqueAgent
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main output -->
+  <main class="main" id="main">
+    <div class="empty-state" id="emptyState">
+      <div class="icon">&#9670;</div>
+      <p>Fill in your product and click Run Campaign</p>
+    </div>
+  </main>
+
+</div>
+
+<script>
+  let evtSource = null;
+
+  function resetPhases() {
+    [1, 2, 3, 4].forEach(i => {
+      const el = document.getElementById("phase-" + i);
+      el.className = "phase-row";
+    });
+  }
+
+  function setPhase(num, status) {
+    const el = document.getElementById("phase-" + num);
+    el.className = "phase-row " + status;
+  }
+
+  function clearMain() {
+    const main = document.getElementById("main");
+    main.innerHTML = "";
+  }
+
+  function appendSection(id, html) {
+    const main = document.getElementById("main");
+    const div = document.createElement("div");
+    div.id = id;
+    div.innerHTML = html;
+    main.appendChild(div);
+  }
+
+  function scoreBadgeClass(total) {
+    if (total >= 75) return "high";
+    if (total >= 55) return "mid";
+    return "low";
+  }
+
+  function renderCampaignBanner(strategy) {
+    const kpis = (strategy.kpis || []).slice(0, 3).map(k => `
+      <div class="kpi">
+        <div class="kpi-label">${k.metric || ""}</div>
+        <div class="kpi-value">${k.target || ""}</div>
+      </div>
+    `).join("");
+
+    appendSection("banner", `
+      <div class="campaign-banner">
+        <div class="goal-tag">Campaign</div>
+        <h2>${strategy.campaign_name || "Campaign"}</h2>
+        <div style="font-size:13px;color:#64748b;line-height:1.6">${strategy.core_message || ""}</div>
+        <div class="kpi-row">${kpis}</div>
+      </div>
+    `);
+  }
+
+  function renderScores(scores) {
+    const cards = scores.map(s => {
+      const dims = s.scores || {};
+      const dimNames = ["clarity", "relevance", "conversion", "originality"];
+      const bars = dimNames.map(d => `
+        <div class="dim-bar-row">
+          <span>${d}</span>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:${(dims[d] || 0) * 10}%"></div>
+          </div>
+          <span class="dim-val">${dims[d] || 0}</span>
+        </div>
+      `).join("");
+
+      return `
+        <div class="score-card">
+          <div class="score-top">
+            <div class="score-title">${s.title || ""}</div>
+            <div class="score-badge ${scoreBadgeClass(s.total)}">${s.total}</div>
+          </div>
+          <div class="dim-bars">${bars}</div>
+          <div class="score-verdict">${s.verdict || ""}</div>
+        </div>
+      `;
+    }).join("");
+
+    appendSection("scores", `
+      <div class="section-header">Critique Scores</div>
+      <div class="scores-grid" style="margin-top:14px">${cards}</div>
+    `);
+  }
+
+  function cleanContent(text) {
+      if (!text) return "";
+      // Replace escaped newlines
+      text = text.replace(/\\n/g, "\n");
+      // Decode \uXXXX unicode escapes safely
+      text = text.replace(/\\u([0-9a-fA-F]{4})/g, function(match, hex) {
+          try { return String.fromCharCode(parseInt(hex, 16)); }
+          catch(e) { return match; }
+      });
+      // Strip HTML tags for plain display
+      text = text.replace(/<[^>]+>/g, "");
+      return text.trim();
+  }
+
+  function renderPiece(piece, index, isRewritten) {
+    const content = cleanContent(piece.content || "");
+    const words = (piece.meta || {}).word_count || 0;
+    const cta   = (piece.meta || {}).cta || "";
+    const bodyId = "body-" + index + (isRewritten ? "-r" : "");
+
+    const changes = isRewritten && piece.changes ? piece.changes.map(c =>
+      `<div class="change-item">[+] ${c}</div>`
+    ).join("") : "";
+
+    const changesHtml = changes ? `<div class="changes-list">${changes}</div>` : "";
+    const rewriteLabel = isRewritten ? `<span class="rewrite-label">Auto-rewritten</span>` : "";
+
+    return `
+      <div class="piece-card ${isRewritten ? "rewritten" : ""}">
+        <div class="piece-header" onclick="toggleBody('${bodyId}')">
+          <span class="type-tag">${(piece.type || "").toUpperCase()}</span>
+          <span class="piece-title">${piece.title || "Untitled"}</span>
+          <div class="piece-meta">
+            ${rewriteLabel}
+            <span>${words} words</span>
+            <span>${piece.channel || ""}</span>
+          </div>
+        </div>
+        <div class="piece-body" id="${bodyId}">
+          <div class="piece-content">${content}</div>
+          ${cta ? `<div class="piece-cta"><strong>CTA:</strong> ${cta}</div>` : ""}
+          ${changesHtml}
+        </div>
+      </div>
+    `;
+  }
+
+  function toggleBody(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle("open");
+  }
+
+  function renderContent(contentPack) {
+    const pieces = (contentPack.content || []).map((p, i) =>
+      renderPiece(p, i, false)
+    ).join("");
+
+    appendSection("content", `
+      <div class="section-header">Content Pieces</div>
+      <div class="pieces-list" style="margin-top:14px">${pieces}</div>
+    `);
+  }
+
+  function renderRewrite(critique) {
+    const rewritten = critique.weakest_rewritten;
+    if (!rewritten) return;
+
+    appendSection("rewrite", `
+      <div class="section-header">Auto-Rewritten Piece</div>
+      <div class="pieces-list" style="margin-top:14px">
+        ${renderPiece(rewritten, 99, true)}
+      </div>
+    `);
+  }
+
+  function runPipeline() {
+    if (evtSource) { evtSource.close(); evtSource = null; }
+
+    const product = document.getElementById("product").value.trim();
+    const goal    = document.getElementById("goal").value;
+    const pieces  = parseInt(document.getElementById("pieces").value, 10);
+
+    if (!product) {
+      alert("Please enter a product description.");
+      return;
+    }
+
+    const btn = document.getElementById("runBtn");
+    btn.disabled = true;
+    btn.textContent = "Running...";
+
+    resetPhases();
+    clearMain();
+
+    // POST to kick off pipeline, then stream SSE from same endpoint
+    fetch("/run", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ product, goal, pieces }),
+    }).then(res => {
+      // Use EventSource-compatible reader on the response body
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      function processBuffer() {
+        const lines = buffer.split("\n");
+        buffer = lines.pop(); // keep incomplete line
+
+        let currentEvent = null;
+
+        for (const line of lines) {
+          if (line.startsWith("event: ")) {
+            currentEvent = line.slice(7).trim();
+          } else if (line.startsWith("data: ")) {
+            const raw = line.slice(6).trim();
+            try {
+              const data = JSON.parse(raw);
+              handleEvent(currentEvent, data);
+            } catch (e) {
+              // partial data, skip
+            }
+          }
+        }
+      }
+
+      function read() {
+        reader.read().then(({ done, value }) => {
+          if (done) {
+            btn.disabled = false;
+            btn.textContent = "Run Campaign";
+            return;
+          }
+          buffer += decoder.decode(value, { stream: true });
+          processBuffer();
+          read();
+        });
+      }
+
+      read();
+    });
+  }
+
+  function handleEvent(type, data) {
+    if (type === "progress") {
+      setPhase(data.phase, data.status);
+    } else if (type === "strategy") {
+      renderCampaignBanner(data);
+    } else if (type === "content") {
+      renderContent(data);
+    } else if (type === "critique") {
+      renderScores(data.scores || []);
+      renderRewrite(data);
+    } else if (type === "done") {
+      document.getElementById("runBtn").disabled = false;
+      document.getElementById("runBtn").textContent = "Run Again";
+    } else if (type === "error") {
+        const phaseLabel = data.phase ? "Phase " + data.phase + " error" : "Pipeline error";
+        appendSection("error-" + (data.phase || "general"),`
+        <div class="error-box">
+          <strong>Pipeline error:</strong> ${data.message}
+          <br><br>
+          <span style="color:#94a3b8;font-size:12px">
+              This is usually a local model JSON issue. 
+              The pipeline will retry automatically next run.
+          </span>
+        </div>
+    `);
+    if (!data.phase || data.phase < 3) {
+      document.getElementById("runBtn").disabled = false;
+      document.getElementById("runBtn").textContent = "Run Campaign";
+    }
+  }
+  }
+</script>
+</body>
+</html>
