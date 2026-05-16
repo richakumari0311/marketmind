@@ -19,6 +19,19 @@ Every run is saved to `memory.json`. On the next run, agents read past campaigns
 
 ---
 
+## Screenshots
+
+### Web UI — live pipeline progress
+![Pipeline running](docs/screenshots/Screenshot1.png)
+
+### Campaign output — scores and content
+![Campaign output](docs/screenshots/Screenshot2.png)
+![Campaign output](docs/screenshots/Screenshot3.png)
+
+### Memory after multiple runs
+![Memory JSON](docs/screenshots/Screenshot4.png)
+
+---
 ## Stack
 
 - **Python 3.10+**
@@ -60,7 +73,7 @@ marketmind/
 ### 1. Clone and create environment
 
 ```bash
-git clone https://github.com/your-username/marketmind.git
+git clone https://github.com/richakumari0311/marketmind.git
 cd marketmind
 python3 -m venv .venv
 source .venv/bin/activate
