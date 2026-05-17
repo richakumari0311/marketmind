@@ -31,7 +31,7 @@ else:  # local ollama
 if PROVIDER == "anthropic":
     MODEL = "claude-sonnet-4-20250514"
 elif PROVIDER == "groq":
-    MODEL = os.getenv("GROQ_MODEL", "llama3-8b-8192")
+    MODEL = os.getenv("GROQ_MODEL", "LOCAL_MODEL=llama-3.3-70b-versatile")
 else:
     MODEL = os.getenv("LOCAL_MODEL", "llama3.2")
 

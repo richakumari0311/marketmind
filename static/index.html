@@ -15,74 +15,94 @@
   }
 
   header {
-    padding: 16px 24px;
+    padding: 14px 16px;
     border-bottom: 1px solid #1e2535;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #0f1117;
   }
-  header h1 { font-size: 18px; font-weight: 600; color: #f8fafc; }
+  header h1 { font-size: 17px; font-weight: 600; color: #f8fafc; }
   header .badge {
-    font-size: 11px; font-weight: 500;
+    font-size: 10px; font-weight: 500;
     background: #1a2744; color: #60a5fa;
     border: 1px solid #2d4a8a;
     padding: 2px 8px; border-radius: 20px;
   }
 
+  /* ── Mobile-first layout ── */
   .layout {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    height: calc(100vh - 53px);
-  }
-
-  .history {
-    border-right: 1px solid #1e2535;
     display: flex;
     flex-direction: column;
+  }
+
+  /* History panel — horizontal scroll on mobile */
+  .history {
+    border-bottom: 1px solid #1e2535;
     overflow: hidden;
   }
   .history-header {
-    padding: 12px 14px 8px;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
+    padding: 10px 16px 6px;
+    font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.8px;
     color: #475569;
     border-bottom: 1px solid #1e2535;
-    flex-shrink: 0;
   }
-  .history-list { flex: 1; overflow-y: auto; padding: 6px 0; }
+  .history-list {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 6px 8px;
+    gap: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .history-list::-webkit-scrollbar { display: none; }
   .history-item {
-    padding: 9px 14px;
+    flex-shrink: 0;
+    padding: 8px 12px;
     cursor: pointer;
-    border-left: 2px solid transparent;
+    border: 1px solid #1e2535;
+    border-radius: 8px;
+    background: #161b27;
     transition: all 0.15s;
+    min-width: 140px;
+    max-width: 180px;
   }
-  .history-item:hover { background: #161b27; border-left-color: #334155; }
-  .history-item.active { background: #161b27; border-left-color: #2563eb; }
+  .history-item:hover { border-color: #334155; }
+  .history-item.active { border-color: #2563eb; background: #0f1a2e; }
   .history-item .hi-name {
     font-size: 11px; font-weight: 600; color: #cbd5e1;
-    margin-bottom: 2px;
+    margin-bottom: 3px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .history-item .hi-meta { font-size: 10px; color: #475569; display: flex; gap: 6px; }
+  .history-item .hi-meta { font-size: 10px; color: #475569; display: flex; gap: 6px; flex-wrap: wrap; }
   .history-item .hi-score { font-size: 10px; font-weight: 600; color: #4ade80; }
-  .history-empty { padding: 20px 14px; font-size: 11px; color: #334155; text-align: center; }
+  .history-empty { padding: 14px 16px; font-size: 11px; color: #334155; }
 
+  /* Main content area */
   .right {
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    height: 100%;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
+  /* Input sidebar — full width on mobile */
   .sidebar {
-    border-right: 1px solid #1e2535;
-    padding: 16px 14px;
+    border-bottom: 1px solid #1e2535;
+    padding: 16px;
     display: flex;
     flex-direction: column;
     gap: 14px;
-    overflow-y: auto;
+  }
+
+  /* Two-col grid for goal + pieces on mobile */
+  .input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
   }
 
   label {
@@ -99,9 +119,10 @@
     border: 1px solid #1e2535;
     border-radius: 7px;
     color: #e2e8f0;
-    font-size: 12px; line-height: 1.6;
-    padding: 9px; resize: vertical; min-height: 110px;
+    font-size: 13px; line-height: 1.6;
+    padding: 10px; resize: vertical; min-height: 100px;
     outline: none; transition: border-color 0.15s;
+    -webkit-appearance: none;
   }
   textarea:focus { border-color: #3b82f6; }
 
@@ -111,35 +132,51 @@
     border: 1px solid #1e2535;
     border-radius: 7px;
     color: #e2e8f0;
-    font-size: 12px; padding: 8px 10px;
-    outline: none; transition: border-color 0.15s; appearance: none;
+    font-size: 13px; padding: 10px 12px;
+    outline: none; transition: border-color 0.15s;
+    -webkit-appearance: none; appearance: none;
+    min-height: 44px;
   }
   select:focus, input[type="number"]:focus { border-color: #3b82f6; }
 
+  .examples-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
   .run-btn {
     background: #2563eb; color: #fff;
-    border: none; border-radius: 7px;
-    padding: 10px; font-size: 13px; font-weight: 600;
+    border: none; border-radius: 8px;
+    padding: 13px; font-size: 14px; font-weight: 600;
     cursor: pointer; transition: background 0.15s, opacity 0.15s; width: 100%;
+    min-height: 48px;
   }
   .run-btn:hover { background: #1d4ed8; }
   .run-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .run-btn:active { transform: scale(0.98); }
 
   .example-btn {
     background: #161b27;
     border: 1px solid #1e2535;
-    border-radius: 5px;
+    border-radius: 6px;
     color: #64748b;
-    font-size: 11px; padding: 5px 8px;
+    font-size: 11px; padding: 8px 10px;
     text-align: left; cursor: pointer;
     transition: all 0.15s; width: 100%;
+    min-height: 44px;
+    line-height: 1.3;
   }
   .example-btn:hover { border-color: #2563eb; color: #93c5fd; background: #0f1a2e; }
 
-  .pipeline { display: flex; flex-direction: column; gap: 5px; }
+  .pipeline {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
   .phase-row {
     display: flex; align-items: center; gap: 7px;
-    padding: 7px 9px; border-radius: 6px;
+    padding: 8px 10px; border-radius: 6px;
     background: #161b27; border: 1px solid #1e2535;
     font-size: 11px; color: #64748b; transition: all 0.2s;
   }
@@ -155,44 +192,48 @@
   .phase-row.error .phase-dot   { background: #dc2626; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
+  /* Results area */
   .main {
-    overflow-y: auto; padding: 20px 24px;
+    padding: 16px;
     display: flex; flex-direction: column; gap: 20px;
   }
   .empty-state {
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    height: 100%; gap: 8px; color: #334155; font-size: 13px;
+    padding: 48px 16px;
+    gap: 8px; color: #334155; font-size: 13px; text-align: center;
   }
 
   .campaign-banner {
     background: #0f1a2e; border: 1px solid #2d4a8a;
-    border-radius: 10px; padding: 16px 20px;
+    border-radius: 10px; padding: 16px;
   }
   .campaign-banner .goal-tag {
     font-size: 10px; font-weight: 600;
     text-transform: uppercase; letter-spacing: 1px;
     color: #60a5fa; margin-bottom: 4px;
   }
-  .campaign-banner h2 { font-size: 18px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; }
+  .campaign-banner h2 { font-size: 16px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; line-height: 1.4; }
 
   .action-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
   .export-btn {
-    padding: 6px 12px; border-radius: 6px;
-    font-size: 11px; font-weight: 600;
+    padding: 8px 14px; border-radius: 6px;
+    font-size: 12px; font-weight: 600;
     cursor: pointer; border: 1px solid;
     transition: all 0.15s; text-decoration: none; display: inline-block;
+    min-height: 36px; white-space: nowrap;
   }
-  .export-btn.pdf  { background: #1c1c2e; color: #a78bfa; border-color: #4c1d95; }
-  .export-btn.docx { background: #0f1e2e; color: #60a5fa; border-color: #1e3a5f; }
+  .export-btn.pdf    { background: #1c1c2e; color: #a78bfa; border-color: #4c1d95; }
+  .export-btn.docx   { background: #0f1e2e; color: #60a5fa; border-color: #1e3a5f; }
   .export-btn.notion { background: #1a1a1a; color: #e2e8f0; border-color: #333; }
-  .export-btn:hover { opacity: 0.8; }
+  .export-btn:hover  { opacity: 0.8; }
   .export-btn.disabled { opacity: 0.35; pointer-events: none; }
 
-  .kpi-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+  .kpi-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
   .kpi {
     background: #0a1120; border: 1px solid #1e3a5f;
     border-radius: 6px; padding: 7px 10px; font-size: 11px;
+    flex: 1; min-width: 100px;
   }
   .kpi .kpi-label { color: #64748b; margin-bottom: 2px; }
   .kpi .kpi-value { color: #93c5fd; font-weight: 600; }
@@ -205,7 +246,7 @@
 
   .scores-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    grid-template-columns: 1fr;
     gap: 10px;
   }
   .score-card {
@@ -226,13 +267,13 @@
     display: flex; align-items: center; gap: 6px;
     font-size: 10px; color: #64748b;
   }
-  .dim-bar-row span:first-child { width: 68px; flex-shrink: 0; }
+  .dim-bar-row span:first-child { width: 72px; flex-shrink: 0; }
   .bar-track {
     flex: 1; background: #1e2535;
     border-radius: 3px; height: 4px; overflow: hidden;
   }
   .bar-fill { height: 100%; border-radius: 3px; background: #2563eb; transition: width 0.6s ease; }
-  .dim-val { width: 14px; text-align: right; flex-shrink: 0; }
+  .dim-val { width: 16px; text-align: right; flex-shrink: 0; }
   .score-verdict {
     font-size: 10px; color: #64748b; line-height: 1.5;
     border-top: 1px solid #1e2535; padding-top: 6px;
@@ -245,10 +286,11 @@
   }
   .piece-card.rewritten { border-color: #16a34a; }
   .piece-header {
-    display: flex; align-items: center; gap: 8px;
-    padding: 10px 14px;
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 12px 14px;
     border-bottom: 1px solid #1e2535;
     background: #0f1117; cursor: pointer; user-select: none;
+    flex-wrap: wrap;
   }
   .piece-header:hover { background: #161b27; }
   .type-tag {
@@ -257,21 +299,22 @@
     padding: 2px 6px; border-radius: 3px;
     background: #1a2744; color: #60a5fa;
     border: 1px solid #2d4a8a; flex-shrink: 0;
+    margin-top: 1px;
   }
   .rewritten .type-tag { background: #14321f; color: #4ade80; border-color: #166534; }
-  .piece-title { font-size: 12px; font-weight: 600; color: #e2e8f0; flex: 1; }
-  .piece-meta { display: flex; gap: 8px; font-size: 10px; color: #475569; flex-shrink: 0; }
+  .piece-title { font-size: 12px; font-weight: 600; color: #e2e8f0; flex: 1; min-width: 0; line-height: 1.4; }
+  .piece-meta { display: flex; gap: 8px; font-size: 10px; color: #475569; flex-shrink: 0; width: 100%; padding-top: 4px; }
   .rewrite-label { font-size: 10px; font-weight: 600; text-transform: uppercase; color: #4ade80; }
   .piece-body { padding: 14px; display: none; }
   .piece-body.open { display: block; }
   .piece-content {
-    font-size: 12px; line-height: 1.75;
+    font-size: 13px; line-height: 1.75;
     color: #94a3b8; white-space: pre-wrap; word-break: break-word;
   }
   .piece-cta {
-    margin-top: 8px; padding: 7px 10px;
+    margin-top: 8px; padding: 8px 10px;
     background: #0f1a2e; border: 1px solid #1e3a5f;
-    border-radius: 6px; font-size: 11px; color: #60a5fa;
+    border-radius: 6px; font-size: 12px; color: #60a5fa;
   }
   .changes-list { margin-top: 8px; display: flex; flex-direction: column; gap: 3px; }
   .change-item {
@@ -283,6 +326,67 @@
     background: #1c0a0a; border: 1px solid #7f1d1d;
     border-radius: 8px; padding: 12px;
     color: #fca5a5; font-size: 12px;
+  }
+
+  /* ── Tablet / Desktop breakpoints ── */
+  @media (min-width: 640px) {
+    .scores-grid {
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+    .sidebar { padding: 20px; }
+    .main { padding: 20px 24px; }
+    .campaign-banner h2 { font-size: 18px; }
+    .pipeline { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  @media (min-width: 900px) {
+    .layout {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      height: calc(100vh - 53px);
+      overflow: hidden;
+    }
+    .history {
+      border-bottom: none;
+      border-right: 1px solid #1e2535;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .history-list {
+      flex-direction: column;
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: 6px 0;
+    }
+    .history-item {
+      border: none;
+      border-left: 2px solid transparent;
+      border-radius: 0;
+      background: transparent;
+      min-width: unset;
+      max-width: unset;
+    }
+    .history-item.active { background: #161b27; border-left-color: #2563eb; }
+    .history-empty { padding: 20px 14px; text-align: center; }
+
+    .right {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      height: 100%;
+      overflow: hidden;
+    }
+    .sidebar {
+      border-bottom: none;
+      border-right: 1px solid #1e2535;
+      overflow-y: auto;
+      padding: 16px 14px;
+    }
+    .input-row { grid-template-columns: 1fr; }
+    .examples-grid { grid-template-columns: 1fr; }
+    .pipeline { grid-template-columns: 1fr; }
+
+    .main { overflow-y: auto; }
   }
 </style>
 </head>
@@ -308,28 +412,32 @@
       <div>
         <label>Product description</label>
         <textarea id="product" placeholder="Describe your product..."></textarea>
-        <div style="margin-top:8px;display:flex;flex-direction:column;gap:4px;">
-          <div style="font-size:10px;color:#475569;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;">
+        <div style="margin-top:10px">
+          <div style="font-size:10px;color:#475569;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">
             Quick examples
           </div>
-          <button class="example-btn" onclick="setExample('fitai')">FitAI -- fitness app</button>
-          <button class="example-btn" onclick="setExample('legaldesk')">LegalDesk -- legal SaaS</button>
-          <button class="example-btn" onclick="setExample('shipfast')">ShipFast -- logistics tool</button>
-          <button class="example-btn" onclick="setExample('eduflow')">EduFlow -- edtech platform</button>
-          <button class="example-btn" onclick="setExample('marketmind')">MarketMind -- original demo</button>
+          <div class="examples-grid">
+            <button class="example-btn" onclick="setExample('fitai')">FitAI — fitness app</button>
+            <button class="example-btn" onclick="setExample('legaldesk')">LegalDesk — legal SaaS</button>
+            <button class="example-btn" onclick="setExample('shipfast')">ShipFast — logistics</button>
+            <button class="example-btn" onclick="setExample('eduflow')">EduFlow — edtech</button>
+            <button class="example-btn" onclick="setExample('marketmind')" style="grid-column:1/-1">MarketMind — demo</button>
+          </div>
         </div>
       </div>
-      <div>
-        <label>Campaign goal</label>
-        <select id="goal">
-          <option value="awareness">Awareness</option>
-          <option value="leads">Leads</option>
-          <option value="retention">Retention</option>
-        </select>
-      </div>
-      <div>
-        <label>Content pieces</label>
-        <input type="number" id="pieces" value="3" min="1" max="6" />
+      <div class="input-row">
+        <div>
+          <label>Campaign goal</label>
+          <select id="goal">
+            <option value="awareness">Awareness</option>
+            <option value="leads">Leads</option>
+            <option value="retention">Retention</option>
+          </select>
+        </div>
+        <div>
+          <label>Pieces</label>
+          <input type="number" id="pieces" value="3" min="1" max="6" />
+        </div>
       </div>
       <button class="run-btn" id="runBtn" onclick="runPipeline()">Run Campaign</button>
       <div class="pipeline" id="pipeline">
@@ -456,13 +564,11 @@
         <div class="kpi-value">${k.target||""}</div>
       </div>
     `).join("");
-
     const rid = run_id || "";
     const disabled = rid ? "" : "disabled";
     const notionBtn = notion_url
       ? `<a class="export-btn notion" href="${notion_url}" target="_blank">View in Notion</a>`
       : "";
-
     appendSection("banner", `
       <div class="campaign-banner">
         <div class="goal-tag">Campaign</div>
@@ -470,10 +576,8 @@
         <div style="font-size:12px;color:#64748b;line-height:1.6">${strategy.core_message||""}</div>
         <div class="kpi-row">${kpis}</div>
         <div class="action-row">
-          <a class="export-btn pdf ${disabled}"
-             href="/campaigns/${rid}/export/pdf" target="_blank">Download PDF</a>
-          <a class="export-btn docx ${disabled}"
-             href="/campaigns/${rid}/export/docx" target="_blank">Download DOCX</a>
+          <a class="export-btn pdf ${disabled}" href="/campaigns/${rid}/export/pdf" target="_blank">Download PDF</a>
+          <a class="export-btn docx ${disabled}" href="/campaigns/${rid}/export/docx" target="_blank">Download DOCX</a>
           ${notionBtn}
         </div>
       </div>
@@ -487,9 +591,7 @@
       const bars = dimNames.map(d => `
         <div class="dim-bar-row">
           <span>${d}</span>
-          <div class="bar-track">
-            <div class="bar-fill" style="width:${(dims[d]||0)*10}%"></div>
-          </div>
+          <div class="bar-track"><div class="bar-fill" style="width:${(dims[d]||0)*10}%"></div></div>
           <span class="dim-val">${dims[d]||0}</span>
         </div>
       `).join("");
@@ -641,19 +743,12 @@
       document.getElementById("runBtn").textContent = "Run Again";
       currentRunId = data.run_id;
 
-      // Update export and notion buttons
       const actionRow = document.querySelector(".action-row");
       if (actionRow) {
         actionRow.innerHTML = `
-          <a class="export-btn pdf"
-             href="/campaigns/${data.run_id}/export/pdf"
-             target="_blank">Download PDF</a>
-          <a class="export-btn docx"
-             href="/campaigns/${data.run_id}/export/docx"
-             target="_blank">Download DOCX</a>
-          ${data.notion_url
-            ? `<a class="export-btn notion" href="${data.notion_url}" target="_blank">View in Notion</a>`
-            : ""}
+          <a class="export-btn pdf" href="/campaigns/${data.run_id}/export/pdf" target="_blank">Download PDF</a>
+          <a class="export-btn docx" href="/campaigns/${data.run_id}/export/docx" target="_blank">Download DOCX</a>
+          ${data.notion_url ? `<a class="export-btn notion" href="${data.notion_url}" target="_blank">View in Notion</a>` : ""}
         `;
       }
       loadHistory();
