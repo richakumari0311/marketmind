@@ -7,30 +7,36 @@ load_dotenv()
 
 PROVIDER = os.getenv("LLM_PROVIDER", "local")
 MAX_RETRIES = 3
-RETRY_DELAY = 2  # seconds between retries
+RETRY_DELAY = 2
 
 if PROVIDER == "anthropic":
     import anthropic
     _client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-else:
+
+elif PROVIDER == "groq":
+    from openai import OpenAI
+    _client = OpenAI(
+        base_url="https://api.groq.com/openai/v1",
+        api_key=os.getenv("GROQ_API_KEY"),
+    )
+
+else:  # local ollama
     from openai import OpenAI
     _client = OpenAI(
         base_url=os.getenv("LOCAL_BASE_URL", "http://localhost:11434/v1"),
         api_key="ollama",
-        timeout=120.0,  # 2 min max per call
+        timeout=120.0,
     )
 
-MODEL = (
-    os.getenv("LOCAL_MODEL", "llama3.2")
-    if PROVIDER == "local"
-    else "claude-sonnet-4-20250514"
-)
+if PROVIDER == "anthropic":
+    MODEL = "claude-sonnet-4-20250514"
+elif PROVIDER == "groq":
+    MODEL = os.getenv("GROQ_MODEL", "llama3-8b-8192")
+else:
+    MODEL = os.getenv("LOCAL_MODEL", "llama3.2")
 
 
 def chat(messages: list[dict], system: str = None) -> str:
-    """
-    Unified chat call with automatic retry on failure.
-    """
     last_error = None
 
     for attempt in range(1, MAX_RETRIES + 1):
@@ -44,12 +50,11 @@ def chat(messages: list[dict], system: str = None) -> str:
                 )
                 return response.content[0].text
 
-            else:
+            else:  # groq or local -- both use OpenAI format
                 all_messages = []
                 if system:
                     all_messages.append({"role": "system", "content": system})
                 all_messages.extend(messages)
-
                 response = _client.chat.completions.create(
                     model=MODEL,
                     messages=all_messages,
@@ -114,23 +119,15 @@ def clean_json_response(text: str) -> str:
 
 
 def parse_json_robust(text: str, context: str = "") -> dict:
-    """
-    Three-stage JSON parser:
-      1. Clean + json.loads
-      2. json_repair
-      3. Model retry
-    """
     import json
     from json_repair import repair_json
 
-    # Stage 1 -- clean and parse
     cleaned = clean_json_response(text)
     try:
         return json.loads(cleaned)
     except json.JSONDecodeError:
         pass
 
-    # Stage 2 -- json_repair
     try:
         repaired = repair_json(cleaned, return_objects=True)
         if isinstance(repaired, dict) and repaired:
@@ -139,7 +136,6 @@ def parse_json_robust(text: str, context: str = "") -> dict:
     except Exception:
         pass
 
-    # Stage 3 -- ask model to fix it
     print(f"  [WARN] {context} JSON broken, asking model to fix...")
     fix_prompt = f"""The following text should be valid JSON but has syntax errors.
 Return ONLY the corrected valid JSON object. No explanation, no markdown.
@@ -153,7 +149,6 @@ Broken JSON:
             system="You are a JSON repair tool. Return only valid JSON, nothing else."
         )
         cleaned_retry = clean_json_response(retry_response)
-
         try:
             result = json.loads(cleaned_retry)
             print(f"  [OK] {context} fixed by model retry")
@@ -175,14 +170,8 @@ Broken JSON:
 
 
 def safe_decode(text: str) -> str:
-    """
-    Safely handle unicode escape sequences in content strings.
-    Replaces the fragile .encode().decode('unicode_escape') pattern
-    which crashes on non-latin characters and certain byte sequences.
-    """
     if not text:
         return ""
-    # Only decode \uXXXX sequences, leave everything else untouched
     def replace_unicode(match):
         try:
             return chr(int(match.group(1), 16))
@@ -192,9 +181,6 @@ def safe_decode(text: str) -> str:
 
 
 def extract_text_from_raw(raw: str) -> str:
-    """
-    Last resort: pull readable strings out of broken JSON.
-    """
     skip_keys = {
         "type", "title", "channel", "cta", "word_count",
         "meta", "content", "blog", "email", "linkedin"

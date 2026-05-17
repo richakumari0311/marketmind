@@ -1,32 +1,17 @@
-# Environment
 .env
 .venv/
-
-# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-
-# macOS
 .DS_Store
 .AppleDouble
 .LSOverride
-
-# Project data
 memory.json
 output*.json
-campaign_output.json
-
-# Logs
 *.log
-
-# VSCode
 .vscode/
-
-campaigns/
-
-# Pytest / coverage
 .pytest_cache/
 .coverage
 htmlcov/
+campaigns/*.json
