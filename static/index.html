@@ -15,69 +15,93 @@
   }
 
   header {
-    padding: 24px 40px;
+    padding: 16px 24px;
     border-bottom: 1px solid #1e2535;
     display: flex;
     align-items: center;
     gap: 12px;
   }
-
-  header h1 {
-    font-size: 20px;
-    font-weight: 600;
-    color: #f8fafc;
-    letter-spacing: -0.3px;
-  }
-
+  header h1 { font-size: 18px; font-weight: 600; color: #f8fafc; }
   header .badge {
-    font-size: 11px;
-    font-weight: 500;
-    background: #1a2744;
-    color: #60a5fa;
+    font-size: 11px; font-weight: 500;
+    background: #1a2744; color: #60a5fa;
     border: 1px solid #2d4a8a;
-    padding: 2px 8px;
-    border-radius: 20px;
+    padding: 2px 8px; border-radius: 20px;
   }
 
   .layout {
     display: grid;
-    grid-template-columns: 340px 1fr;
-    height: calc(100vh - 65px);
+    grid-template-columns: 220px 1fr;
+    height: calc(100vh - 53px);
   }
 
-  /* --- Sidebar --- */
-  .sidebar {
+  .history {
     border-right: 1px solid #1e2535;
-    padding: 28px 24px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    overflow: hidden;
+  }
+  .history-header {
+    padding: 12px 14px 8px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #475569;
+    border-bottom: 1px solid #1e2535;
+    flex-shrink: 0;
+  }
+  .history-list { flex: 1; overflow-y: auto; padding: 6px 0; }
+  .history-item {
+    padding: 9px 14px;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  .history-item:hover { background: #161b27; border-left-color: #334155; }
+  .history-item.active { background: #161b27; border-left-color: #2563eb; }
+  .history-item .hi-name {
+    font-size: 11px; font-weight: 600; color: #cbd5e1;
+    margin-bottom: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .history-item .hi-meta { font-size: 10px; color: #475569; display: flex; gap: 6px; }
+  .history-item .hi-score { font-size: 10px; font-weight: 600; color: #4ade80; }
+  .history-empty { padding: 20px 14px; font-size: 11px; color: #334155; text-align: center; }
+
+  .right {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .sidebar {
+    border-right: 1px solid #1e2535;
+    padding: 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
     overflow-y: auto;
   }
 
   label {
     display: block;
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 10px; font-weight: 500;
     color: #94a3b8;
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    text-transform: uppercase; letter-spacing: 0.5px;
   }
 
   textarea {
     width: 100%;
     background: #161b27;
     border: 1px solid #1e2535;
-    border-radius: 8px;
+    border-radius: 7px;
     color: #e2e8f0;
-    font-size: 13px;
-    line-height: 1.6;
-    padding: 12px;
-    resize: vertical;
-    min-height: 140px;
-    outline: none;
-    transition: border-color 0.15s;
+    font-size: 12px; line-height: 1.6;
+    padding: 9px; resize: vertical; min-height: 110px;
+    outline: none; transition: border-color 0.15s;
   }
   textarea:focus { border-color: #3b82f6; }
 
@@ -85,337 +109,180 @@
     width: 100%;
     background: #161b27;
     border: 1px solid #1e2535;
-    border-radius: 8px;
+    border-radius: 7px;
     color: #e2e8f0;
-    font-size: 13px;
-    padding: 10px 12px;
-    outline: none;
-    transition: border-color 0.15s;
-    appearance: none;
+    font-size: 12px; padding: 8px 10px;
+    outline: none; transition: border-color 0.15s; appearance: none;
   }
   select:focus, input[type="number"]:focus { border-color: #3b82f6; }
 
   .run-btn {
-    background: #2563eb;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.15s, opacity 0.15s;
-    width: 100%;
+    background: #2563eb; color: #fff;
+    border: none; border-radius: 7px;
+    padding: 10px; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s, opacity 0.15s; width: 100%;
   }
   .run-btn:hover { background: #1d4ed8; }
   .run-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
-  /* --- Pipeline progress --- */
-  .pipeline {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .phase-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border-radius: 8px;
+  .example-btn {
     background: #161b27;
     border: 1px solid #1e2535;
-    font-size: 13px;
+    border-radius: 5px;
     color: #64748b;
-    transition: all 0.2s;
+    font-size: 11px; padding: 5px 8px;
+    text-align: left; cursor: pointer;
+    transition: all 0.15s; width: 100%;
   }
-  .phase-row.running {
-    border-color: #2563eb;
-    color: #93c5fd;
-  }
-  .phase-row.done {
-    border-color: #16a34a;
-    color: #86efac;
-  }
-  .phase-row.error {
-    border-color: #dc2626;
-    color: #fca5a5;
-  }
+  .example-btn:hover { border-color: #2563eb; color: #93c5fd; background: #0f1a2e; }
 
+  .pipeline { display: flex; flex-direction: column; gap: 5px; }
+  .phase-row {
+    display: flex; align-items: center; gap: 7px;
+    padding: 7px 9px; border-radius: 6px;
+    background: #161b27; border: 1px solid #1e2535;
+    font-size: 11px; color: #64748b; transition: all 0.2s;
+  }
+  .phase-row.running { border-color: #2563eb; color: #93c5fd; }
+  .phase-row.done    { border-color: #16a34a; color: #86efac; }
+  .phase-row.error   { border-color: #dc2626; color: #fca5a5; }
   .phase-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #1e2535;
-    flex-shrink: 0;
-    transition: background 0.2s;
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #1e2535; flex-shrink: 0; transition: background 0.2s;
   }
   .phase-row.running .phase-dot { background: #2563eb; animation: pulse 1s infinite; }
-  .phase-row.done .phase-dot { background: #16a34a; }
-  .phase-row.error .phase-dot { background: #dc2626; }
+  .phase-row.done .phase-dot    { background: #16a34a; }
+  .phase-row.error .phase-dot   { background: #dc2626; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
-  /* --- Main content area --- */
   .main {
-    overflow-y: auto;
-    padding: 28px 36px;
-    display: flex;
-    flex-direction: column;
-    gap: 28px;
+    overflow-y: auto; padding: 20px 24px;
+    display: flex; flex-direction: column; gap: 20px;
   }
-
   .empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    gap: 12px;
-    color: #334155;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    height: 100%; gap: 8px; color: #334155; font-size: 13px;
   }
-  .empty-state .icon { font-size: 48px; }
-  .empty-state p { font-size: 15px; }
 
-  /* --- Campaign banner --- */
   .campaign-banner {
-    background: linear-gradient(135deg, #1a2744 0%, #0f1a2e 100%);
-    border: 1px solid #2d4a8a;
-    border-radius: 12px;
-    padding: 20px 24px;
+    background: #0f1a2e; border: 1px solid #2d4a8a;
+    border-radius: 10px; padding: 16px 20px;
   }
   .campaign-banner .goal-tag {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #60a5fa;
-    margin-bottom: 6px;
+    font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: #60a5fa; margin-bottom: 4px;
   }
-  .campaign-banner h2 {
-    font-size: 22px;
-    font-weight: 700;
-    color: #f1f5f9;
-    margin-bottom: 12px;
+  .campaign-banner h2 { font-size: 18px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; }
+
+  .action-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .export-btn {
+    padding: 6px 12px; border-radius: 6px;
+    font-size: 11px; font-weight: 600;
+    cursor: pointer; border: 1px solid;
+    transition: all 0.15s; text-decoration: none; display: inline-block;
   }
-  .kpi-row {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-top: 12px;
-  }
+  .export-btn.pdf  { background: #1c1c2e; color: #a78bfa; border-color: #4c1d95; }
+  .export-btn.docx { background: #0f1e2e; color: #60a5fa; border-color: #1e3a5f; }
+  .export-btn.notion { background: #1a1a1a; color: #e2e8f0; border-color: #333; }
+  .export-btn:hover { opacity: 0.8; }
+  .export-btn.disabled { opacity: 0.35; pointer-events: none; }
+
+  .kpi-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
   .kpi {
-    background: #0f1a2e;
-    border: 1px solid #1e3a5f;
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 12px;
+    background: #0a1120; border: 1px solid #1e3a5f;
+    border-radius: 6px; padding: 7px 10px; font-size: 11px;
   }
   .kpi .kpi-label { color: #64748b; margin-bottom: 2px; }
-  .kpi .kpi-value { color: #93c5fd; font-weight: 600; font-size: 13px; }
+  .kpi .kpi-value { color: #93c5fd; font-weight: 600; }
 
-  /* --- Section headers --- */
   .section-header {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #475569;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #1e2535;
+    font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1px; color: #475569;
+    padding-bottom: 8px; border-bottom: 1px solid #1e2535;
   }
 
-  /* --- Score cards --- */
   .scores-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 10px;
   }
-
   .score-card {
-    background: #161b27;
-    border: 1px solid #1e2535;
-    border-radius: 10px;
-    padding: 16px;
+    background: #161b27; border: 1px solid #1e2535;
+    border-radius: 8px; padding: 12px;
   }
-  .score-card .score-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 8px;
-    margin-bottom: 10px;
+  .score-top {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 8px; margin-bottom: 8px;
   }
-  .score-card .score-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: #cbd5e1;
-    line-height: 1.4;
-  }
-  .score-badge {
-    font-size: 18px;
-    font-weight: 700;
-    flex-shrink: 0;
-  }
+  .score-title { font-size: 11px; font-weight: 600; color: #cbd5e1; line-height: 1.4; }
+  .score-badge { font-size: 15px; font-weight: 700; flex-shrink: 0; }
   .score-badge.high { color: #4ade80; }
   .score-badge.mid  { color: #facc15; }
   .score-badge.low  { color: #f87171; }
-
-  .dim-bars {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    margin-bottom: 10px;
-  }
+  .dim-bars { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
   .dim-bar-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 11px;
-    color: #64748b;
+    display: flex; align-items: center; gap: 6px;
+    font-size: 10px; color: #64748b;
   }
-  .dim-bar-row span:first-child { width: 72px; flex-shrink: 0; }
+  .dim-bar-row span:first-child { width: 68px; flex-shrink: 0; }
   .bar-track {
-    flex: 1;
-    background: #1e2535;
-    border-radius: 4px;
-    height: 5px;
-    overflow: hidden;
+    flex: 1; background: #1e2535;
+    border-radius: 3px; height: 4px; overflow: hidden;
   }
-  .bar-fill {
-    height: 100%;
-    border-radius: 4px;
-    background: #2563eb;
-    transition: width 0.6s ease;
-  }
-  .dim-bar-row .dim-val { width: 16px; text-align: right; flex-shrink: 0; }
-
+  .bar-fill { height: 100%; border-radius: 3px; background: #2563eb; transition: width 0.6s ease; }
+  .dim-val { width: 14px; text-align: right; flex-shrink: 0; }
   .score-verdict {
-    font-size: 12px;
-    color: #64748b;
-    line-height: 1.5;
-    border-top: 1px solid #1e2535;
-    padding-top: 8px;
+    font-size: 10px; color: #64748b; line-height: 1.5;
+    border-top: 1px solid #1e2535; padding-top: 6px;
   }
 
-  /* --- Content pieces --- */
-  .pieces-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
+  .pieces-list { display: flex; flex-direction: column; gap: 10px; }
   .piece-card {
-    background: #161b27;
-    border: 1px solid #1e2535;
-    border-radius: 10px;
-    overflow: hidden;
+    background: #161b27; border: 1px solid #1e2535;
+    border-radius: 8px; overflow: hidden;
   }
-  .piece-card.rewritten {
-    border-color: #16a34a;
-  }
-
+  .piece-card.rewritten { border-color: #16a34a; }
   .piece-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 18px;
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
     border-bottom: 1px solid #1e2535;
-    background: #0f1117;
-    cursor: pointer;
-    user-select: none;
+    background: #0f1117; cursor: pointer; user-select: none;
   }
   .piece-header:hover { background: #161b27; }
-
   .type-tag {
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    background: #1a2744;
-    color: #60a5fa;
-    border: 1px solid #2d4a8a;
-    flex-shrink: 0;
+    font-size: 9px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    padding: 2px 6px; border-radius: 3px;
+    background: #1a2744; color: #60a5fa;
+    border: 1px solid #2d4a8a; flex-shrink: 0;
   }
-  .rewritten .type-tag {
-    background: #14321f;
-    color: #4ade80;
-    border-color: #166534;
-  }
-
-  .piece-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #e2e8f0;
-    flex: 1;
-  }
-
-  .piece-meta {
-    display: flex;
-    gap: 12px;
-    font-size: 11px;
-    color: #475569;
-    flex-shrink: 0;
-  }
-
-  .piece-body {
-    padding: 18px;
-    display: none;
-  }
+  .rewritten .type-tag { background: #14321f; color: #4ade80; border-color: #166534; }
+  .piece-title { font-size: 12px; font-weight: 600; color: #e2e8f0; flex: 1; }
+  .piece-meta { display: flex; gap: 8px; font-size: 10px; color: #475569; flex-shrink: 0; }
+  .rewrite-label { font-size: 10px; font-weight: 600; text-transform: uppercase; color: #4ade80; }
+  .piece-body { padding: 14px; display: none; }
   .piece-body.open { display: block; }
-
   .piece-content {
-    font-size: 14px;
-    line-height: 1.75;
-    color: #94a3b8;
-    white-space: pre-wrap;
-    word-break: break-word;
+    font-size: 12px; line-height: 1.75;
+    color: #94a3b8; white-space: pre-wrap; word-break: break-word;
   }
-
   .piece-cta {
-    margin-top: 14px;
-    padding: 10px 14px;
-    background: #0f1a2e;
-    border: 1px solid #1e3a5f;
-    border-radius: 8px;
-    font-size: 12px;
-    color: #60a5fa;
+    margin-top: 8px; padding: 7px 10px;
+    background: #0f1a2e; border: 1px solid #1e3a5f;
+    border-radius: 6px; font-size: 11px; color: #60a5fa;
   }
-  .piece-cta strong { color: #93c5fd; }
-
-  .changes-list {
-    margin-top: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
+  .changes-list { margin-top: 8px; display: flex; flex-direction: column; gap: 3px; }
   .change-item {
-    font-size: 12px;
-    color: #4ade80;
-    padding: 4px 0;
-    border-top: 1px solid #1e2535;
+    font-size: 11px; color: #4ade80;
+    padding: 3px 0; border-top: 1px solid #1e2535;
   }
   .change-item:first-child { border-top: none; }
-
-  .rewrite-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: #4ade80;
-  }
-
   .error-box {
-    background: #1c0a0a;
-    border: 1px solid #7f1d1d;
-    border-radius: 8px;
-    padding: 16px;
-    color: #fca5a5;
-    font-size: 13px;
+    background: #1c0a0a; border: 1px solid #7f1d1d;
+    border-radius: 8px; padding: 12px;
+    color: #fca5a5; font-size: 12px;
   }
 </style>
 </head>
@@ -428,106 +295,187 @@
 
 <div class="layout">
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div>
-      <label>Product description</label>
-      <textarea id="product" placeholder="Describe your product and target audience...">MarketMind -- a B2B SaaS tool that helps marketing teams at remote-first startups plan, generate, and iterate on campaign content using AI agents. Replaces 3-4 separate tools with one unified workflow.</textarea>
-    </div>
-
-    <div>
-      <label>Campaign goal</label>
-      <select id="goal">
-        <option value="awareness">Awareness</option>
-        <option value="leads">Leads</option>
-        <option value="retention">Retention</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Content pieces</label>
-      <input type="number" id="pieces" value="3" min="1" max="6" />
-    </div>
-
-    <button class="run-btn" id="runBtn" onclick="runPipeline()">
-      Run Campaign
-    </button>
-
-    <!-- Pipeline progress -->
-    <div class="pipeline" id="pipeline">
-      <div class="phase-row" id="phase-1">
-        <div class="phase-dot"></div> ResearchAgent
-      </div>
-      <div class="phase-row" id="phase-2">
-        <div class="phase-dot"></div> StrategyAgent
-      </div>
-      <div class="phase-row" id="phase-3">
-        <div class="phase-dot"></div> ContentAgent
-      </div>
-      <div class="phase-row" id="phase-4">
-        <div class="phase-dot"></div> CritiqueAgent
-      </div>
+  <aside class="history">
+    <div class="history-header">Campaign history</div>
+    <div class="history-list" id="historyList">
+      <div class="history-empty">No campaigns yet</div>
     </div>
   </aside>
 
-  <!-- Main output -->
-  <main class="main" id="main">
-    <div class="empty-state" id="emptyState">
-      <div class="icon">&#9670;</div>
-      <p>Fill in your product and click Run Campaign</p>
-    </div>
-  </main>
+  <div class="right">
 
+    <aside class="sidebar">
+      <div>
+        <label>Product description</label>
+        <textarea id="product" placeholder="Describe your product..."></textarea>
+        <div style="margin-top:8px;display:flex;flex-direction:column;gap:4px;">
+          <div style="font-size:10px;color:#475569;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;">
+            Quick examples
+          </div>
+          <button class="example-btn" onclick="setExample('fitai')">FitAI -- fitness app</button>
+          <button class="example-btn" onclick="setExample('legaldesk')">LegalDesk -- legal SaaS</button>
+          <button class="example-btn" onclick="setExample('shipfast')">ShipFast -- logistics tool</button>
+          <button class="example-btn" onclick="setExample('eduflow')">EduFlow -- edtech platform</button>
+          <button class="example-btn" onclick="setExample('marketmind')">MarketMind -- original demo</button>
+        </div>
+      </div>
+      <div>
+        <label>Campaign goal</label>
+        <select id="goal">
+          <option value="awareness">Awareness</option>
+          <option value="leads">Leads</option>
+          <option value="retention">Retention</option>
+        </select>
+      </div>
+      <div>
+        <label>Content pieces</label>
+        <input type="number" id="pieces" value="3" min="1" max="6" />
+      </div>
+      <button class="run-btn" id="runBtn" onclick="runPipeline()">Run Campaign</button>
+      <div class="pipeline" id="pipeline">
+        <div class="phase-row" id="phase-1"><div class="phase-dot"></div> ResearchAgent</div>
+        <div class="phase-row" id="phase-2"><div class="phase-dot"></div> StrategyAgent</div>
+        <div class="phase-row" id="phase-3"><div class="phase-dot"></div> ContentAgent</div>
+        <div class="phase-row" id="phase-4"><div class="phase-dot"></div> CritiqueAgent</div>
+      </div>
+    </aside>
+
+    <main class="main" id="main">
+      <div class="empty-state" id="emptyState">
+        Run a campaign or select one from history
+      </div>
+    </main>
+
+  </div>
 </div>
 
 <script>
-  let evtSource = null;
+  const EXAMPLES = {
+    marketmind: {
+      product: `MarketMind -- a B2B SaaS tool that helps marketing teams at remote-first startups plan, generate, and iterate on campaign content using AI agents. Replaces 3-4 separate tools with one unified workflow.`,
+      goal: "awareness"
+    },
+    fitai: {
+      product: `FitAI -- a mobile fitness app that uses AI to create personalized workout and nutrition plans for busy professionals aged 25-40. Competes with MyFitnessPal and Whoop. Key differentiator: adapts plans daily based on sleep, stress, and calendar data.`,
+      goal: "leads"
+    },
+    legaldesk: {
+      product: `LegalDesk -- a B2B SaaS platform that helps small law firms (2-15 lawyers) automate client intake, document generation, and billing. Replaces manual Word templates and spreadsheets. Target buyer: law firm managing partners who are not tech-savvy.`,
+      goal: "awareness"
+    },
+    shipfast: {
+      product: `ShipFast -- a logistics coordination tool for e-commerce brands doing $1M-$10M in annual revenue. Connects with Shopify, automates carrier selection, and reduces shipping costs by 15-30%. Target buyer: e-commerce operations managers frustrated with manual carrier comparisons.`,
+      goal: "leads"
+    },
+    eduflow: {
+      product: `EduFlow -- an edtech platform for corporate L&D teams at mid-size companies (200-2000 employees). Turns internal documentation and SOPs into interactive micro-learning courses using AI. Competes with Docebo and Cornerstone. Key pain point: existing LMS platforms require dedicated instructional designers.`,
+      goal: "retention"
+    },
+  };
+
+  function setExample(key) {
+    const ex = EXAMPLES[key];
+    if (!ex) return;
+    document.getElementById("product").value = ex.product;
+    document.getElementById("goal").value = ex.goal;
+  }
+
+  let currentRunId = null;
+  window.addEventListener("DOMContentLoaded", loadHistory);
+
+  function loadHistory() {
+    fetch("/campaigns")
+      .then(r => r.json())
+      .then(campaigns => renderHistory(campaigns))
+      .catch(() => {});
+  }
+
+  function renderHistory(campaigns) {
+    const list = document.getElementById("historyList");
+    if (!campaigns.length) {
+      list.innerHTML = '<div class="history-empty">No campaigns yet</div>';
+      return;
+    }
+    list.innerHTML = campaigns.map(c => `
+      <div class="history-item" id="hi-${c.run_id}" onclick="loadCampaign('${c.run_id}')">
+        <div class="hi-name">${c.campaign_name}</div>
+        <div class="hi-meta">
+          <span>${c.date}</span>
+          <span>${c.goal}</span>
+          <span class="hi-score">${c.avg_score}/100</span>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function loadCampaign(run_id) {
+    document.querySelectorAll(".history-item").forEach(el => el.classList.remove("active"));
+    const item = document.getElementById("hi-" + run_id);
+    if (item) item.classList.add("active");
+
+    fetch(`/campaigns/${run_id}`)
+      .then(r => r.json())
+      .then(data => {
+        currentRunId = run_id;
+        clearMain();
+        const notion_url = data.meta && data.meta.notion_url ? data.meta.notion_url : "";
+        renderCampaignBanner(data.strategy, data.meta, run_id, notion_url);
+        if (data.content)  renderContent(data.content);
+        if (data.critique) {
+          renderScores(data.critique.scores || []);
+          renderRewrite(data.critique);
+        }
+      });
+  }
 
   function resetPhases() {
-    [1, 2, 3, 4].forEach(i => {
-      const el = document.getElementById("phase-" + i);
-      el.className = "phase-row";
+    [1,2,3,4].forEach(i => {
+      document.getElementById("phase-"+i).className = "phase-row";
     });
   }
-
   function setPhase(num, status) {
-    const el = document.getElementById("phase-" + num);
-    el.className = "phase-row " + status;
+    document.getElementById("phase-"+num).className = "phase-row " + status;
   }
-
   function clearMain() {
-    const main = document.getElementById("main");
-    main.innerHTML = "";
+    document.getElementById("main").innerHTML = "";
   }
-
   function appendSection(id, html) {
     const main = document.getElementById("main");
     const div = document.createElement("div");
-    div.id = id;
-    div.innerHTML = html;
+    div.id = id; div.innerHTML = html;
     main.appendChild(div);
   }
-
   function scoreBadgeClass(total) {
-    if (total >= 75) return "high";
-    if (total >= 55) return "mid";
-    return "low";
+    return total >= 75 ? "high" : total >= 55 ? "mid" : "low";
   }
 
-  function renderCampaignBanner(strategy) {
-    const kpis = (strategy.kpis || []).slice(0, 3).map(k => `
+  function renderCampaignBanner(strategy, meta, run_id, notion_url) {
+    const kpis = (strategy.kpis || []).slice(0,3).map(k => `
       <div class="kpi">
-        <div class="kpi-label">${k.metric || ""}</div>
-        <div class="kpi-value">${k.target || ""}</div>
+        <div class="kpi-label">${k.metric||""}</div>
+        <div class="kpi-value">${k.target||""}</div>
       </div>
     `).join("");
+
+    const rid = run_id || "";
+    const disabled = rid ? "" : "disabled";
+    const notionBtn = notion_url
+      ? `<a class="export-btn notion" href="${notion_url}" target="_blank">View in Notion</a>`
+      : "";
 
     appendSection("banner", `
       <div class="campaign-banner">
         <div class="goal-tag">Campaign</div>
-        <h2>${strategy.campaign_name || "Campaign"}</h2>
-        <div style="font-size:13px;color:#64748b;line-height:1.6">${strategy.core_message || ""}</div>
+        <h2>${strategy.campaign_name||"Campaign"}</h2>
+        <div style="font-size:12px;color:#64748b;line-height:1.6">${strategy.core_message||""}</div>
         <div class="kpi-row">${kpis}</div>
+        <div class="action-row">
+          <a class="export-btn pdf ${disabled}"
+             href="/campaigns/${rid}/export/pdf" target="_blank">Download PDF</a>
+          <a class="export-btn docx ${disabled}"
+             href="/campaigns/${rid}/export/docx" target="_blank">Download DOCX</a>
+          ${notionBtn}
+        </div>
       </div>
     `);
   }
@@ -535,77 +483,65 @@
   function renderScores(scores) {
     const cards = scores.map(s => {
       const dims = s.scores || {};
-      const dimNames = ["clarity", "relevance", "conversion", "originality"];
+      const dimNames = ["clarity","relevance","conversion","originality"];
       const bars = dimNames.map(d => `
         <div class="dim-bar-row">
           <span>${d}</span>
           <div class="bar-track">
-            <div class="bar-fill" style="width:${(dims[d] || 0) * 10}%"></div>
+            <div class="bar-fill" style="width:${(dims[d]||0)*10}%"></div>
           </div>
-          <span class="dim-val">${dims[d] || 0}</span>
+          <span class="dim-val">${dims[d]||0}</span>
         </div>
       `).join("");
-
       return `
         <div class="score-card">
           <div class="score-top">
-            <div class="score-title">${s.title || ""}</div>
+            <div class="score-title">${s.title||""}</div>
             <div class="score-badge ${scoreBadgeClass(s.total)}">${s.total}</div>
           </div>
           <div class="dim-bars">${bars}</div>
-          <div class="score-verdict">${s.verdict || ""}</div>
+          <div class="score-verdict">${s.verdict||""}</div>
         </div>
       `;
     }).join("");
-
     appendSection("scores", `
       <div class="section-header">Critique Scores</div>
-      <div class="scores-grid" style="margin-top:14px">${cards}</div>
+      <div class="scores-grid" style="margin-top:12px">${cards}</div>
     `);
   }
 
   function cleanContent(text) {
-      if (!text) return "";
-      // Replace escaped newlines
-      text = text.replace(/\\n/g, "\n");
-      // Decode \uXXXX unicode escapes safely
-      text = text.replace(/\\u([0-9a-fA-F]{4})/g, function(match, hex) {
-          try { return String.fromCharCode(parseInt(hex, 16)); }
-          catch(e) { return match; }
-      });
-      // Strip HTML tags for plain display
-      text = text.replace(/<[^>]+>/g, "");
-      return text.trim();
+    if (!text) return "";
+    text = text.replace(/\\n/g, "\n");
+    text = text.replace(/\\u([0-9a-fA-F]{4})/g, (m, hex) => {
+      try { return String.fromCharCode(parseInt(hex,16)); } catch(e) { return m; }
+    });
+    text = text.replace(/<[^>]+>/g, "");
+    return text.trim();
   }
 
   function renderPiece(piece, index, isRewritten) {
-    const content = cleanContent(piece.content || "");
-    const words = (piece.meta || {}).word_count || 0;
-    const cta   = (piece.meta || {}).cta || "";
-    const bodyId = "body-" + index + (isRewritten ? "-r" : "");
-
-    const changes = isRewritten && piece.changes ? piece.changes.map(c =>
-      `<div class="change-item">[+] ${c}</div>`
-    ).join("") : "";
-
-    const changesHtml = changes ? `<div class="changes-list">${changes}</div>` : "";
-    const rewriteLabel = isRewritten ? `<span class="rewrite-label">Auto-rewritten</span>` : "";
-
+    const content = cleanContent(piece.content||"");
+    const words   = (piece.meta||{}).word_count||0;
+    const cta     = (piece.meta||{}).cta||"";
+    const bodyId  = "body-"+index+(isRewritten?"-r":"");
+    const changes = isRewritten && piece.changes
+      ? piece.changes.map(c => `<div class="change-item">[+] ${c}</div>`).join("") : "";
     return `
-      <div class="piece-card ${isRewritten ? "rewritten" : ""}">
+      <div class="piece-card ${isRewritten?"rewritten":""}">
         <div class="piece-header" onclick="toggleBody('${bodyId}')">
-          <span class="type-tag">${(piece.type || "").toUpperCase()}</span>
-          <span class="piece-title">${piece.title || "Untitled"}</span>
+          <span class="type-tag">${(piece.type||"").toUpperCase()}</span>
+          <span class="piece-title">${piece.title||"Untitled"}</span>
           <div class="piece-meta">
-            ${rewriteLabel}
-            <span>${words} words</span>
-            <span>${piece.channel || ""}</span>
+            ${isRewritten ? '<span class="rewrite-label">Rewritten</span>' : ""}
+            <span>${words}w</span>
+            <span>${piece.channel||""}</span>
           </div>
         </div>
         <div class="piece-body" id="${bodyId}">
           <div class="piece-content">${content}</div>
-          ${cta ? `<div class="piece-cta"><strong>CTA:</strong> ${cta}</div>` : ""}
-          ${changesHtml}
+          ${cta ? `<div class="piece-cta"><b>CTA:</b> ${cta}</div>` : ""}
+          ${changes ? `<div class="changes-list">${changes}</div>` : ""}
         </div>
       </div>
     `;
@@ -617,39 +553,29 @@
   }
 
   function renderContent(contentPack) {
-    const pieces = (contentPack.content || []).map((p, i) =>
-      renderPiece(p, i, false)
-    ).join("");
-
+    const pieces = (contentPack.content||[]).map((p,i) => renderPiece(p,i,false)).join("");
     appendSection("content", `
       <div class="section-header">Content Pieces</div>
-      <div class="pieces-list" style="margin-top:14px">${pieces}</div>
+      <div class="pieces-list" style="margin-top:12px">${pieces}</div>
     `);
   }
 
   function renderRewrite(critique) {
     const rewritten = critique.weakest_rewritten;
     if (!rewritten) return;
-
     appendSection("rewrite", `
       <div class="section-header">Auto-Rewritten Piece</div>
-      <div class="pieces-list" style="margin-top:14px">
+      <div class="pieces-list" style="margin-top:12px">
         ${renderPiece(rewritten, 99, true)}
       </div>
     `);
   }
 
   function runPipeline() {
-    if (evtSource) { evtSource.close(); evtSource = null; }
-
     const product = document.getElementById("product").value.trim();
     const goal    = document.getElementById("goal").value;
     const pieces  = parseInt(document.getElementById("pieces").value, 10);
-
-    if (!product) {
-      alert("Please enter a product description.");
-      return;
-    }
+    if (!product) { alert("Please enter a product description."); return; }
 
     const btn = document.getElementById("runBtn");
     btn.disabled = true;
@@ -657,35 +583,29 @@
 
     resetPhases();
     clearMain();
+    currentRunId = null;
 
-    // POST to kick off pipeline, then stream SSE from same endpoint
     fetch("/run", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ product, goal, pieces }),
     }).then(res => {
-      // Use EventSource-compatible reader on the response body
-      const reader = res.body.getReader();
+      const reader  = res.body.getReader();
       const decoder = new TextDecoder();
       let buffer = "";
+      let currentEvent = null;
 
       function processBuffer() {
         const lines = buffer.split("\n");
-        buffer = lines.pop(); // keep incomplete line
-
-        let currentEvent = null;
-
+        buffer = lines.pop();
         for (const line of lines) {
           if (line.startsWith("event: ")) {
             currentEvent = line.slice(7).trim();
           } else if (line.startsWith("data: ")) {
-            const raw = line.slice(6).trim();
             try {
-              const data = JSON.parse(raw);
+              const data = JSON.parse(line.slice(6).trim());
               handleEvent(currentEvent, data);
-            } catch (e) {
-              // partial data, skip
-            }
+            } catch(e) {}
           }
         }
       }
@@ -702,7 +622,6 @@
           read();
         });
       }
-
       read();
     });
   }
@@ -711,32 +630,45 @@
     if (type === "progress") {
       setPhase(data.phase, data.status);
     } else if (type === "strategy") {
-      renderCampaignBanner(data);
+      renderCampaignBanner(data, {}, null, "");
     } else if (type === "content") {
       renderContent(data);
     } else if (type === "critique") {
-      renderScores(data.scores || []);
+      renderScores(data.scores||[]);
       renderRewrite(data);
     } else if (type === "done") {
       document.getElementById("runBtn").disabled = false;
       document.getElementById("runBtn").textContent = "Run Again";
+      currentRunId = data.run_id;
+
+      // Update export and notion buttons
+      const actionRow = document.querySelector(".action-row");
+      if (actionRow) {
+        actionRow.innerHTML = `
+          <a class="export-btn pdf"
+             href="/campaigns/${data.run_id}/export/pdf"
+             target="_blank">Download PDF</a>
+          <a class="export-btn docx"
+             href="/campaigns/${data.run_id}/export/docx"
+             target="_blank">Download DOCX</a>
+          ${data.notion_url
+            ? `<a class="export-btn notion" href="${data.notion_url}" target="_blank">View in Notion</a>`
+            : ""}
+        `;
+      }
+      loadHistory();
     } else if (type === "error") {
-        const phaseLabel = data.phase ? "Phase " + data.phase + " error" : "Pipeline error";
-        appendSection("error-" + (data.phase || "general"),`
+      const label = data.phase ? "Phase "+data.phase+" error" : "Pipeline error";
+      appendSection("error-"+(data.phase||"g"), `
         <div class="error-box">
-          <strong>Pipeline error:</strong> ${data.message}
+          <b>${label}:</b> ${data.message}
           <br><br>
-          <span style="color:#94a3b8;font-size:12px">
-              This is usually a local model JSON issue. 
-              The pipeline will retry automatically next run.
-          </span>
+          <span style="color:#94a3b8;font-size:11px">Usually a local model JSON issue -- retry the run.</span>
         </div>
-    `);
-    if (!data.phase || data.phase < 3) {
+      `);
       document.getElementById("runBtn").disabled = false;
       document.getElementById("runBtn").textContent = "Run Campaign";
     }
-  }
   }
 </script>
 </body>

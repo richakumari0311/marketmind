@@ -24,6 +24,8 @@ campaign_output.json
 # VSCode
 .vscode/
 
+campaigns/
+
 # Pytest / coverage
 .pytest_cache/
 .coverage
